@@ -1,6 +1,5 @@
 package com.driver.models;
 
-import org.apache.catalina.User;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -8,51 +7,34 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name= "Blog")
-public class Blog{
+@Table(name = "Blog")
+public class Blog {
 
     @Id
-    @GeneratedValue(strategy =GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int Id;
+
     private String title;
     private String content;
 
     @CreationTimestamp
-    private Date pubDate;
+    Date pubDate;
 
-    //Mapping
-    @ManyToOne
-    @JoinColumn
-    private User user;
-
-    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
-    private List<Image> imageList;
-
-    public Blog(com.driver.models.User user, String title, String content) {
-
-    }
-
-    public Blog(User user, String title, String content) {
+    public Blog(String title, String content, User user) {
         this.title = title;
         this.content = content;
         this.user = user;
     }
 
-    public Blog(int id, String title, String content, Date pubDate, User user, List<Image> imageList) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.pubDate = pubDate;
-        this.user = user;
-        this.imageList = imageList;
+    public Blog() {
     }
 
     public int getId() {
-        return id;
+        return Id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        Id = id;
     }
 
     public String getTitle() {
@@ -78,6 +60,13 @@ public class Blog{
     public void setPubDate(Date pubDate) {
         this.pubDate = pubDate;
     }
+
+    @ManyToOne
+    @JoinColumn
+    private User user;
+
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
+    List<Image> imageList;
 
     public User getUser() {
         return user;

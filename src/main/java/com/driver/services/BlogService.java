@@ -6,7 +6,6 @@ import com.driver.models.User;
 import com.driver.repositories.BlogRepository;
 import com.driver.repositories.ImageRepository;
 import com.driver.repositories.UserRepository;
-import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,20 +19,18 @@ public class BlogService {
     BlogRepository blogRepository1;
 
     @Autowired
-    UserRepository userRepository1;
+    UserRepository userRepository;
 
-    public Blog createAndReturnBlog(Integer userId, String title, String content) throws Exception {
+    public Blog createAndReturnBlog(Integer userId, String title, String content)throws Exception {
         //create a blog at the current time
-
-        if(!userRepository1.findById(userId).isPresent()){
+        if(!userRepository.findById(userId).isPresent())
             throw new Exception();
-        }
-        User user = userRepository1.findById(userId).get();
-        Blog blog = new Blog(user,title,content);
+
+        User user = userRepository.findById(userId).get();
+        Blog blog = new Blog(title,content,user);
         blogRepository1.save(blog);
         user.getBlogList().add(blog);
         return blog;
-
     }
 
     public void deleteBlog(int blogId){

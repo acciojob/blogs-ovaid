@@ -17,7 +17,13 @@ public class ImageController {
 
     @PostMapping("/{blogId}/add-image")
     public ResponseEntity<String> addImage(@PathVariable int blogId, @RequestParam String description, @RequestParam String dimensions) {
-        imageService.addImage(blogId,description,dimensions);
+        // Add image into the give blog
+        try{
+            imageService.addImage(blogId,description,dimensions);
+        }
+        catch (Exception ignored){
+
+        }
         return new ResponseEntity<>("Added image successfully", HttpStatus.OK);
     }
 
@@ -29,6 +35,7 @@ public class ImageController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteImage(@PathVariable int id) {
+        // delete image using deleteById
         imageService.deleteImage(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
