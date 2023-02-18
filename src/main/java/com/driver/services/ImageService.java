@@ -15,41 +15,51 @@ public class ImageService {
     @Autowired
     ImageRepository imageRepository2;
 
-    public Image addImage(Integer blogId, String description, String dimensions) throws Exception{
+    public Image addImage(Integer blogId, String description, String dimensions) {
         //add an image to the blog
-        if(!blogRepository2.findById(blogId).isPresent())
-            throw new Exception();
+        Image image = new Image();
+
+        image.setDescription(description);
+        image.setDimensions(dimensions);
 
         Blog blog = blogRepository2.findById(blogId).get();
-        Image image = new Image(blog,description,dimensions);
-        blog.getImageList().add(image);
+
+        image.setBlog(blog);
+
+        List<Image> imageList = blog.getImageList();
+        imageList.add(image);
+        blog.setImageList(imageList);
+
         blogRepository2.save(blog);
+        //imageRepository2.save(image);  // image will be saved by cascading effect
+
         return image;
     }
 
     public void deleteImage(Integer id){
+
         imageRepository2.deleteById(id);
     }
 
     public int countImagesInScreen(Integer id, String screenDimensions) {
         //Find the number of images of given dimensions that can fit in a screen having `screenDimensions`
-        String [] screenArray = screenDimensions.split("X");
+
         Image image = imageRepository2.findById(id).get();
+        String dimension = image.getDimensions();
 
-        String imageDimensions = image.getDimensions();
-        String [] imageArray = imageDimensions.split("X");
+        String[] screenDimensionArray = screenDimensions.split("X");
+        String[] dimensionArray = dimension.split("X");
 
-        int screenLength = Integer.parseInt(screenArray[0]);
-        int screenBreadth = Integer.parseInt(screenArray[1]);
 
-        int imageLength = Integer.parseInt(imageArray[0]);
-        int imageBreadth = Integer.parseInt(imageArray[1]);
+        int l1 = Integer.valueOf(screenDimensionArray[0]);
+        int b1 = Integer.valueOf(screenDimensionArray[1]);
 
-        return no_Images(screenLength,screenBreadth,imageLength,imageBreadth);
-    }
-    private int no_Images(int screenLength, int screenBreadth, int imageLength, int imageBreadth) {
-        int lenC = screenLength/imageLength;
-        int lenB = screenBreadth/imageBreadth;
-        return lenC*lenB;
+        int l2 = Integer.valueOf(dimensionArray[0]);
+        int b2 = Integer.valueOf(dimensionArray[1]);
+
+        int l = l1 / l2;
+        int b = b1 / b2;
+
+        return l*b;
     }
 }

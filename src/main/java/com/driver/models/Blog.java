@@ -1,50 +1,41 @@
 package com.driver.models;
 
+
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "blog")
-public class Blog{
+public class Blog {
 
     @Id
-    @GeneratedValue(strategy =GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String title;
+
     private String content;
 
     @CreationTimestamp
     private Date pubDate;
 
-    //Mapping
+    // Blog is child w.r.t user
+    // Setting here the foreign key
     @ManyToOne
-    @JoinColumn
-    private User user;
+    @JoinColumn  // Adding foreign key
+    private User user; // Parent entity we are connecting with
+
 
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
-    @JoinColumn
-    private List<Image> imageList;
+    private List<Image> imageList = new ArrayList<>();
+
 
     public Blog() {
-
-    }
-
-    public Blog(User user, String title, String content) {
-        this.title = title;
-        this.content = content;
-        this.user = user;
-    }
-
-    public Blog(int id, String title, String content, Date pubDate, User user, List<Image> imageList) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.pubDate = pubDate;
-        this.user = user;
-        this.imageList = imageList;
     }
 
     public int getId() {
@@ -71,14 +62,6 @@ public class Blog{
         this.content = content;
     }
 
-    public Date getPubDate() {
-        return pubDate;
-    }
-
-    public void setPubDate(Date pubDate) {
-        this.pubDate = pubDate;
-    }
-
     public User getUser() {
         return user;
     }
@@ -93,5 +76,13 @@ public class Blog{
 
     public void setImageList(List<Image> imageList) {
         this.imageList = imageList;
+    }
+
+    public Date getPubDate() {
+        return pubDate;
+    }
+
+    public void setPubDate(Date pubDate) {
+        this.pubDate = pubDate;
     }
 }
